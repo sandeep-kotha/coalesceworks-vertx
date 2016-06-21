@@ -1,0 +1,37 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'groovy'
+  id 'eclipse'
+}
+
+repositories {
+  jcenter()
+  mavenCentral()
+}
+
+version = '3.2.1'
+sourceCompatibility = '1.8'
+
+dependencies {
+  compile "io.vertx:vertx-core:$version"
+  compile "io.vertx:vertx-lang-groovy:3.2.1"
+  compile 'org.apache.activemq:activemq-all:5.13.2'
+}
+
+mainClassName = 'com.coalesceworks.async.transports.init.BootStrap'
+
+task fatJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'Transports',  
+        	'Implementation-Version': version,
+        	'Main-Class': mainClassName
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.13'
+}
